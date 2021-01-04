@@ -5,11 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f/storage_v2/_src_/database/forum.IY3RBQ/schema/main.uQUzAA.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f/storage_v2/_src_/database/forum.IY3RBQ/schema/main.uQUzAA.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/user/delivery/http/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/delivery/http/handler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/user/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/repository.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/user/repository/pg_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/repository/pg_repository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/user/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/usecase.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/user/usecase/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/usecase/usecase.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

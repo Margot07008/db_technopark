@@ -68,7 +68,7 @@ func (p pgUserRepository) Update(userUpd models.User) (models.User, *models.Erro
 		return updatedUser, nil
 	}
 
-	querySQL := "UPDATE users SET"
+	querySQL := "UPDATE main.users SET"
 
 	if userUpd.Email != "" {
 		querySQL += " email = '" + userUpd.Email + "',"
