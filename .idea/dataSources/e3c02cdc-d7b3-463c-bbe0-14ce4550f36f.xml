@@ -1413,7 +1413,7 @@ false posixrules
     <database id="2" parent="1" name="forum">
       <ObjectId>16613</ObjectId>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>515</IntrospectionStateNumber>
+      <IntrospectionStateNumber>521</IntrospectionStateNumber>
     </database>
     <database id="3" parent="1" name="postgres">
       <ObjectId>13395</ObjectId>
@@ -1477,7 +1477,7 @@ U/10
       <ObjectId>16622</ObjectId>
       <StateNumber>506</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>516</IntrospectionStateNumber>
+      <IntrospectionStateNumber>522</IntrospectionStateNumber>
     </schema>
     <schema id="17" parent="2" name="pg_catalog">
       <ObjectId>11</ObjectId>
