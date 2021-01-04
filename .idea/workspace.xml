@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8e6c67a-4570-45bf-93ac-82cf779a173d" name="Default Changelist" comment="" />
+    <list default="true" id="d8e6c67a-4570-45bf-93ac-82cf779a173d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f/storage_v2/_src_/database/forum.IY3RBQ/schema/main.uQUzAA.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f/storage_v2/_src_/database/forum.IY3RBQ/schema/main.uQUzAA.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/user/delivery/http/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/delivery/http/handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/user/repository/pg_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/repository/pg_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/api/main.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,10 +23,14 @@
     </option>
   </component>
   <component name="GOROOT" url="file://$PROJECT_DIR$/../../../../go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
   </component>
   <component name="ProjectId" id="1lR5pqKfjaOzGqYVkMgXe6ra9DY" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -63,5 +75,16 @@
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/application/user/repository/pg_repository.go</url>
+          <line>19</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

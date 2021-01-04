@@ -11,6 +11,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Can not connect to database: ", err)
 	}
-	s := server.NewServer(":5000", conn)
+	s := server.NewServer(":8080", conn)
 	log.Fatal(s.ListenAndServe())
 }

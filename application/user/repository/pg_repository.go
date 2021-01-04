@@ -15,7 +15,7 @@ func NewPgUserRepository(db *pgx.ConnPool) user.Repository {
 }
 
 func (p pgUserRepository) Create(userNew models.User) (models.User, *models.Error) {
-	res, err := p.conn.Exec(`INSERT INTO users (nickname, fullname, email, about) VALUES ($1, $2, $3, $4)`,
+	res, err := p.conn.Exec(`INSERT INTO main.users (nickname, fullname, email, about) VALUES ($1, $2, $3, $4)`,
 		userNew.Nickname, userNew.Fullname, userNew.Email, userNew.About)
 	if err != nil {
 		return models.User{}, models.NewError(409, models.CreateError)
