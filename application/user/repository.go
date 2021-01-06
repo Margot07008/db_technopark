@@ -7,4 +7,5 @@ type Repository interface {
 	GetByNickname(nickname string) (models.User, *models.Error)
 	GetByEmail(email string) (models.User, *models.Error)
 	Update(userUdp models.User) (models.User, *models.Error)
+	GetByForum(forum models.Forum, query models.PostsRequestQuery) (models.Users, *models.Error)
 }

@@ -14,6 +14,49 @@ func NewPgUserRepository(db *pgx.ConnPool) user.Repository {
 	return &pgUserRepository{conn: db}
 }
 
+func (p pgUserRepository) GetByForum(forum models.Forum, query models.PostsRequestQuery) (models.Users, *models.Error) {
+	baseSQL := `select about, email, fullname, u.nickname from main.forums as users_forum join main.users u on u.nickname = users_forum.user`
+
+	baseSQL += ` where slug = '` + forum.Slug + `'`
+	if query.Since != "" {
+		if query.Desc {
+			baseSQL += ` and u.nickname < '` + query.Since + `'`
+		} else {
+			baseSQL += ` and u.nickname > '` + query.Since + `'`
+		}
+	}
+
+	if query.Desc {
+		baseSQL += " order by nickname desc"
+	} else {
+		baseSQL += " order by nickname asc"
+	}
+
+	if query.Limit > 0 {
+		baseSQL += " limit " + query.GetStringLimit()
+	}
+
+	res, err := p.conn.Query(baseSQL)
+	if err != nil {
+		return models.Users{}, models.NewError(500, models.DBParsingError)
+	}
+	defer res.Close()
+
+	foundUsers := models.Users{}
+	buffer := models.User{}
+
+	for res.Next() {
+		err = res.Scan(&buffer.About, &buffer.Email, &buffer.Fullname, &buffer.Nickname)
+
+		if err != nil {
+			return models.Users{}, models.NewError(500, models.DBParsingError)
+		}
+		foundUsers = append(foundUsers, buffer)
+	}
+
+	return foundUsers, nil
+}
+
 func (p pgUserRepository) GetByNickname(nickname string) (models.User, *models.Error) {
 	modelUser := models.User{}
 	res, err := p.conn.Query(`SELECT nickname, email, fullname, about FROM main.users WHERE nickname = $1`, nickname)

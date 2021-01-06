@@ -3,6 +3,7 @@ package http
 import (
 	"db_technopark/application/forum"
 	"db_technopark/application/models"
+	"db_technopark/pkg/queryWorker"
 	"github.com/buaazp/fasthttprouter"
 	"github.com/valyala/fasthttp"
 )
@@ -17,6 +18,7 @@ func NewForumHandler(router *fasthttprouter.Router, forumUsecase forum.Usecase) 
 	}
 	router.POST("/api/forum/:path1", handler.CheckPath) ///create
 	router.GET("/api/forum/:slug/details", handler.GetForumBySlug)
+	router.GET("/api/forum/:slug/users", handler.GerForumUsers)
 }
 
 func (h ForumHandler) CheckPath(ctx *fasthttp.RequestCtx) {
@@ -27,6 +29,29 @@ func (h ForumHandler) CheckPath(ctx *fasthttp.RequestCtx) {
 		ctx.SetStatusCode(404)
 		ctx.SetBody(models.BadRequestErrorBytes)
 	}
+}
+
+func (h ForumHandler) GerForumUsers(ctx *fasthttp.RequestCtx) {
+	slug := ctx.UserValue("slug").(string)
+	query := models.PostsRequestQuery{
+		Limit: queryWorker.GetIntParam(ctx, "limit"),
+		Since: queryWorker.GetStringParam(ctx, "since"),
+		Desc:  queryWorker.GetBoolParam(ctx, "desc"),
+	}
+	users, err := h.forumUsecase.GetForumUsers(slug, query)
+	if err != nil {
+		err.SetToContext(ctx)
+		return
+	}
+
+	jsonBlob, e := users.MarshalJSON()
+	if e != nil {
+		ctx.SetStatusCode(500)
+		ctx.SetBody(models.InternalErrorBytes)
+		return
+	}
+
+	ctx.SetBody(jsonBlob)
 }
 
 func (h ForumHandler) GetForumBySlug(ctx *fasthttp.RequestCtx) {

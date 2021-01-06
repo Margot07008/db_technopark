@@ -352,101 +352,7 @@ func (v *User) UnmarshalJSON(data []byte) error {
 func (v *User) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels3(l, v)
 }
-func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels4(in *jlexer.Lexer, out *Forum) {
-	isTopLevel := in.IsStart()
-	if in.IsNull() {
-		if isTopLevel {
-			in.Consumed()
-		}
-		in.Skip()
-		return
-	}
-	in.Delim('{')
-	for !in.IsDelim('}') {
-		key := in.UnsafeFieldName(false)
-		in.WantColon()
-		if in.IsNull() {
-			in.Skip()
-			in.WantComma()
-			continue
-		}
-		switch key {
-		case "posts":
-			out.Posts = int64(in.Int64())
-		case "slug":
-			out.Slug = string(in.String())
-		case "threads":
-			out.Threads = int32(in.Int32())
-		case "title":
-			out.Title = string(in.String())
-		case "user":
-			out.User = string(in.String())
-		default:
-			in.SkipRecursive()
-		}
-		in.WantComma()
-	}
-	in.Delim('}')
-	if isTopLevel {
-		in.Consumed()
-	}
-}
-func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels4(out *jwriter.Writer, in Forum) {
-	out.RawByte('{')
-	first := true
-	_ = first
-	{
-		const prefix string = ",\"posts\":"
-		out.RawString(prefix[1:])
-		out.Int64(int64(in.Posts))
-	}
-	{
-		const prefix string = ",\"slug\":"
-		out.RawString(prefix)
-		out.String(string(in.Slug))
-	}
-	{
-		const prefix string = ",\"threads\":"
-		out.RawString(prefix)
-		out.Int32(int32(in.Threads))
-	}
-	{
-		const prefix string = ",\"title\":"
-		out.RawString(prefix)
-		out.String(string(in.Title))
-	}
-	{
-		const prefix string = ",\"user\":"
-		out.RawString(prefix)
-		out.String(string(in.User))
-	}
-	out.RawByte('}')
-}
-
-// MarshalJSON supports json.Marshaler interface
-func (v Forum) MarshalJSON() ([]byte, error) {
-	w := jwriter.Writer{}
-	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels4(&w, v)
-	return w.Buffer.BuildBytes(), w.Error
-}
-
-// MarshalEasyJSON supports easyjson.Marshaler interface
-func (v Forum) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels4(w, v)
-}
-
-// UnmarshalJSON supports json.Unmarshaler interface
-func (v *Forum) UnmarshalJSON(data []byte) error {
-	r := jlexer.Lexer{Data: data}
-	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels4(&r, v)
-	return r.Error()
-}
-
-// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *Forum) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels4(l, v)
-}
-func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels5(in *jlexer.Lexer, out *Threads) {
+func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels4(in *jlexer.Lexer, out *Threads) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		in.Skip()
@@ -474,7 +380,7 @@ func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels5(in *jlexer.Lexer, out 
 		in.Consumed()
 	}
 }
-func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels5(out *jwriter.Writer, in Threads) {
+func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels4(out *jwriter.Writer, in Threads) {
 	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 		out.RawString("null")
 	} else {
@@ -492,27 +398,27 @@ func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels5(out *jwriter.Writer, i
 // MarshalJSON supports json.Marshaler interface
 func (v Threads) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels5(&w, v)
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels4(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Threads) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels5(w, v)
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels4(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Threads) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels5(&r, v)
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels4(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Threads) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels5(l, v)
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels4(l, v)
 }
-func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels6(in *jlexer.Lexer, out *TreadUpdate) {
+func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels5(in *jlexer.Lexer, out *TreadUpdate) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -549,7 +455,7 @@ func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels6(in *jlexer.Lexer, out 
 		in.Consumed()
 	}
 }
-func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels6(out *jwriter.Writer, in TreadUpdate) {
+func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels5(out *jwriter.Writer, in TreadUpdate) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -595,27 +501,27 @@ func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels6(out *jwriter.Writer, i
 // MarshalJSON supports json.Marshaler interface
 func (v TreadUpdate) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels6(&w, v)
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels5(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v TreadUpdate) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels6(w, v)
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels5(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *TreadUpdate) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels6(&r, v)
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels5(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *TreadUpdate) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels6(l, v)
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels5(l, v)
 }
-func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels7(in *jlexer.Lexer, out *Thread) {
+func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels6(in *jlexer.Lexer, out *Thread) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -662,7 +568,7 @@ func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels7(in *jlexer.Lexer, out 
 		in.Consumed()
 	}
 }
-func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels7(out *jwriter.Writer, in Thread) {
+func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels6(out *jwriter.Writer, in Thread) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -718,23 +624,324 @@ func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels7(out *jwriter.Writer, i
 // MarshalJSON supports json.Marshaler interface
 func (v Thread) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels7(&w, v)
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels6(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Thread) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels7(w, v)
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels6(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Thread) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels6(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *Thread) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels6(l, v)
+}
+func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels7(in *jlexer.Lexer, out *Forum) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "posts":
+			out.Posts = int64(in.Int64())
+		case "slug":
+			out.Slug = string(in.String())
+		case "threads":
+			out.Threads = int32(in.Int32())
+		case "title":
+			out.Title = string(in.String())
+		case "user":
+			out.User = string(in.String())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels7(out *jwriter.Writer, in Forum) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"posts\":"
+		out.RawString(prefix[1:])
+		out.Int64(int64(in.Posts))
+	}
+	{
+		const prefix string = ",\"slug\":"
+		out.RawString(prefix)
+		out.String(string(in.Slug))
+	}
+	{
+		const prefix string = ",\"threads\":"
+		out.RawString(prefix)
+		out.Int32(int32(in.Threads))
+	}
+	{
+		const prefix string = ",\"title\":"
+		out.RawString(prefix)
+		out.String(string(in.Title))
+	}
+	{
+		const prefix string = ",\"user\":"
+		out.RawString(prefix)
+		out.String(string(in.User))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v Forum) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels7(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v Forum) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels7(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *Forum) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels7(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *Thread) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *Forum) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels7(l, v)
+}
+func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels8(in *jlexer.Lexer, out *PostsRelatedQuery) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "need_author":
+			out.NeedAuthor = bool(in.Bool())
+		case "need_forum":
+			out.NeedForum = bool(in.Bool())
+		case "need_thread":
+			out.NeedThread = bool(in.Bool())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels8(out *jwriter.Writer, in PostsRelatedQuery) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"need_author\":"
+		out.RawString(prefix[1:])
+		out.Bool(bool(in.NeedAuthor))
+	}
+	{
+		const prefix string = ",\"need_forum\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.NeedForum))
+	}
+	{
+		const prefix string = ",\"need_thread\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.NeedThread))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v PostsRelatedQuery) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels8(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v PostsRelatedQuery) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels8(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *PostsRelatedQuery) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels8(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *PostsRelatedQuery) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels8(l, v)
+}
+func easyjsonD2b7633eDecodeDbTechnoparkApplicationModels9(in *jlexer.Lexer, out *PostsRequestQuery) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "id":
+			out.ThreadID = int64(in.Int64())
+		case "slug":
+			out.ThreadSlug = string(in.String())
+		case "limit":
+			out.Limit = int(in.Int())
+		case "since":
+			out.Since = string(in.String())
+		case "sort":
+			out.Sort = string(in.String())
+		case "desc":
+			out.Desc = bool(in.Bool())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonD2b7633eEncodeDbTechnoparkApplicationModels9(out *jwriter.Writer, in PostsRequestQuery) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	if in.ThreadID != 0 {
+		const prefix string = ",\"id\":"
+		first = false
+		out.RawString(prefix[1:])
+		out.Int64(int64(in.ThreadID))
+	}
+	if in.ThreadSlug != "" {
+		const prefix string = ",\"slug\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.ThreadSlug))
+	}
+	if in.Limit != 0 {
+		const prefix string = ",\"limit\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Int(int(in.Limit))
+	}
+	if in.Since != "" {
+		const prefix string = ",\"since\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Since))
+	}
+	if in.Sort != "" {
+		const prefix string = ",\"sort\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Sort))
+	}
+	if in.Desc {
+		const prefix string = ",\"desc\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Bool(bool(in.Desc))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v PostsRequestQuery) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels9(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v PostsRequestQuery) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonD2b7633eEncodeDbTechnoparkApplicationModels9(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *PostsRequestQuery) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels9(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *PostsRequestQuery) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonD2b7633eDecodeDbTechnoparkApplicationModels9(l, v)
 }
