@@ -1,28 +1,24 @@
 package repository
 
 import (
-	"fmt"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/forum"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/models"
-	"github.com/go-pg/pg/v9"
+	"db_technopark/application/forum"
+	"db_technopark/application/models"
+	"github.com/jackc/pgx"
 )
 
-type PGRepository struct {
-	db *pg.DB
+type pgForumRepository struct {
+	conn *pgx.ConnPool
 }
 
-func NewPgRepository(db *pg.DB) forum.Repository {
-	return &PGRepository{db: db}
+func NewPgForumRepository(db *pgx.ConnPool) forum.Repository {
+	return &pgForumRepository{conn: db}
 }
 
-func (p *PGRepository) CreateForum(forum models.Forum) (*models.Forum, error) {
-	query := fmt.Sprintf(`insert into main.forum 
-					(slug, title, user) values ('%s', '%s', '%s')`, forum.Slug, forum.Title, forum.User)
-
-	_, err := p.db.Query(&forum, query)
+func (p pgForumRepository) CreateForum(userNick string, forumNew models.Forum) (models.Forum, *models.Error) {
+	forumNew.User = userNick
+	_, err := p.conn.Exec(`INSERT INTO main.forums (slug, title, "user", posts, threads) VALUES ($1, $2, $3, $4, $5)`, forumNew.Slug, forumNew.Title, forumNew.User, forumNew.Posts, forumNew.Threads)
 	if err != nil {
-		return nil, err
+		return models.Forum{}, models.NewError(409, models.CreateError)
 	}
-
-	return &forum, nil
+	return forumNew, nil
 }

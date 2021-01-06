@@ -1,15 +1,19 @@
 package server
 
 import (
-	"db_technopark/application/user/usecase"
 	"github.com/buaazp/fasthttprouter"
 	"github.com/jackc/pgx"
 	_ "github.com/jackc/pgx"
 	"github.com/valyala/fasthttp"
 	_ "github.com/valyala/fasthttp"
 
-	"db_technopark/application/user/delivery/http"
-	"db_technopark/application/user/repository"
+	deliveryUser "db_technopark/application/user/delivery/http"
+	repositoryUser "db_technopark/application/user/repository"
+	usecaseUser "db_technopark/application/user/usecase"
+
+	deliveryForum "db_technopark/application/forum/delivery/http"
+	repositoryForum "db_technopark/application/forum/repository"
+	usecaseForum "db_technopark/application/forum/usecase"
 )
 
 type server struct {
@@ -19,12 +23,16 @@ type server struct {
 
 func NewServer(host string, conn *pgx.ConnPool) *server {
 
-	userRepo := repository.NewPgUserRepository(conn)
-	userUsecase := usecase.NewUserUsecase(userRepo)
+	userRepo := repositoryUser.NewPgUserRepository(conn)
+	forumRepo := repositoryForum.NewPgForumRepository(conn)
+
+	userUsecase := usecaseUser.NewUserUsecase(userRepo)
+	forumUsecase := usecaseForum.NewForumUsecase(userRepo, forumRepo)
 
 	router := fasthttprouter.New()
 
-	http.NewUserHandler(router, userUsecase)
+	deliveryUser.NewUserHandler(router, userUsecase)
+	deliveryForum.NewForumHandler(router, forumUsecase)
 
 	return &server{
 		Host:   host,

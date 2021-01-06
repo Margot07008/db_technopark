@@ -1,45 +1,24 @@
 package usecase
 
 import (
-	"github.com/apsdehal/go-logger"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/models"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/forum"
+	"db_technopark/application/forum"
+	"db_technopark/application/models"
+	"db_technopark/application/user"
 )
 
-type UseCase struct {
-	infoLogger       *logger.Logger
-	errorLogger      *logger.Logger
-	strg             forum.Repository
+type forumUsecase struct {
+	userRepo  user.Repository
+	forumRepo forum.Repository
 }
 
-func (u *UseCase) CreateThread(slug string, template models.Thread) (*models.Thread, error) {
-	panic("implement me")
+func NewForumUsecase(userRepo user.Repository, forumRepo forum.Repository) forum.Usecase {
+	return &forumUsecase{forumRepo: forumRepo, userRepo: userRepo}
 }
 
-func (u *UseCase) GetForumBySlug(slug string) (*models.Forum, error) {
-	panic("implement me")
-}
-
-func (u *UseCase) GetAllForumTreads(slug string, params models.ForumParams) ([]models.Thread, error) {
-	panic("implement me")
-}
-
-func (u *UseCase) GetAllForumUsers(slug string, params models.ForumParams) ([]models.User, error) {
-	panic("implement me")
-}
-
-func NewUseCase(infoLogger *logger.Logger,
-	errorLogger *logger.Logger,
-	strg forum.Repository) forum.UseCase {
-	usecase := UseCase{
-		infoLogger:  infoLogger,
-		errorLogger: errorLogger,
-		strg:        strg,
+func (u forumUsecase) CreateForum(forumNew models.Forum) (models.Forum, *models.Error) {
+	author, err := u.userRepo.GetByNickname(forumNew.User)
+	if err != nil {
+		return models.Forum{}, err
 	}
-	return &usecase
+	return u.forumRepo.CreateForum(author.Nickname, forumNew)
 }
-
-func (u *UseCase) CreateForum(template models.Forum) (*models.Forum, error) {
-	return u.strg.CreateForum(template)
-}
-

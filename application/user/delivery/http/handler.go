@@ -5,10 +5,20 @@ import (
 	"db_technopark/application/user"
 	"github.com/buaazp/fasthttprouter"
 	"github.com/valyala/fasthttp"
+	"regexp"
 )
 
 type UserHandler struct {
 	usecase user.Usecase
+}
+
+var nicknamePattern = regexp.MustCompile("^[A-Za-z0-9_.]+$")
+
+func ValidateNickname(nickname string) *models.Error {
+	if !nicknamePattern.MatchString(nickname) {
+		return models.NewError(400, models.BadRequestError, "invalid nickname")
+	}
+	return nil
 }
 
 func NewUserHandler(router *fasthttprouter.Router, usecase user.Usecase) {
@@ -22,7 +32,11 @@ func NewUserHandler(router *fasthttprouter.Router, usecase user.Usecase) {
 
 func (u UserHandler) UpdateUser(ctx *fasthttp.RequestCtx) {
 	nickname := ctx.UserValue("nickname").(string)
-
+	e := ValidateNickname(nickname)
+	if e != nil {
+		e.SetToContext(ctx)
+		return
+	}
 	buffer := models.User{}
 	body := ctx.PostBody()
 	err := buffer.UnmarshalJSON(body)
@@ -34,8 +48,8 @@ func (u UserHandler) UpdateUser(ctx *fasthttp.RequestCtx) {
 	buffer.Nickname = nickname
 	returnedUser, e := u.usecase.UpdateUser(buffer)
 	if e != nil {
-		//e.SetToContext(ctx)
-		//return
+		e.SetToContext(ctx)
+		return
 	}
 	jsonBlob, err := returnedUser.MarshalJSON()
 	if err != nil {
@@ -45,7 +59,6 @@ func (u UserHandler) UpdateUser(ctx *fasthttp.RequestCtx) {
 	}
 	ctx.SetBody(jsonBlob)
 }
-
 
 func (u UserHandler) GetUser(ctx *fasthttp.RequestCtx) {
 	nickname := ctx.UserValue("nickname").(string)
@@ -60,11 +73,11 @@ func (u UserHandler) GetUser(ctx *fasthttp.RequestCtx) {
 
 func (u UserHandler) CreateUser(ctx *fasthttp.RequestCtx) {
 	nickname := ctx.UserValue("nickname").(string)
-	//e := validation.ValidateNickname(nickname)
-	//if e != nil
-	//	e.SetToContext(ctx)
-	//	return
-	//}
+	e := ValidateNickname(nickname)
+	if e != nil {
+		e.SetToContext(ctx)
+		return
+	}
 	buffer := models.User{}
 	body := ctx.PostBody()
 	err := buffer.UnmarshalJSON(body)
@@ -83,7 +96,7 @@ func (u UserHandler) CreateUser(ctx *fasthttp.RequestCtx) {
 			foundedUser = append(foundedUser, existedUserNick)
 		}
 		existedUserEmail, err := u.usecase.GetUserByEmail(buffer.Email)
-		if err == nil && existedUserNick.Email != existedUserEmail.Email{
+		if err == nil && existedUserNick.Email != existedUserEmail.Email {
 			foundedUser = append(foundedUser, existedUserEmail)
 		}
 		jsonBlob, e := foundedUser.MarshalJSON()
