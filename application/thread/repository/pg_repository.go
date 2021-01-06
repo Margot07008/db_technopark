@@ -1,91 +1,47 @@
 package repository
 
 import (
-	"fmt"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/models"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/thread"
-	"github.com/go-pg/pg/v9"
+	"db_technopark/application/models"
+	"db_technopark/application/thread"
+	"github.com/jackc/pgx"
 )
 
-func NewPgRepository(db *pg.DB) thread.Repository {
-	return &pgStorage{db: db}
+type pgThreadRepository struct {
+	conn *pgx.ConnPool
 }
 
-type pgStorage struct {
-	db *pg.DB
+func NewPgThreadRepository(conn *pgx.ConnPool) thread.Repository {
+	return &pgThreadRepository{conn: conn}
 }
 
-func (p *pgStorage) GetThreadDetails(ID int32, slug string) (*models.Thread, error) {
-	panic("implement me")
-}
+func (p pgThreadRepository) CreateThread(forum models.Forum, user models.User, thread models.Thread) (models.Thread, *models.Error) {
+	thread.Forum = forum.Slug
+	thread.Author = user.Nickname
 
-func (p *pgStorage) CreateThread(thread models.Thread) (*models.Thread, error) {
-	panic("implement me")
-}
+	tx, _ := p.conn.Begin()
+	defer tx.Rollback()
+	if thread.Slug == "" {
+		err := tx.QueryRow(`insert into main.threads (author, created, forum, message, title) values ($1, $2, $3, $4, $5) returning id`,
+			thread.Author, thread.Created, thread.Forum, thread.Message,
+			thread.Title).Scan(&thread.Id)
+		if err == pgx.ErrNoRows || err != nil {
+			return models.Thread{}, models.NewError(409, models.ConflictError)
+		}
 
-func (p *pgStorage) UpdateThread(thread models.Thread) (*models.Thread, error) {
-	panic("implement me")
-}
+	} else {
+		err := tx.QueryRow(`insert into main.threads (author, created, forum, message, slug, title) values ($1, $2, $3, $4, $5, $6) returning id`,
+			thread.Author, thread.Created, thread.Forum, thread.Message, thread.Slug,
+			thread.Title).Scan(&thread.Id)
+		if err == pgx.ErrNoRows || err != nil {
+			return models.Thread{}, models.NewError(409, models.ConflictError)
+		}
 
-func (p *pgStorage) GetPostsThread(params models.ThreadParams) ([]models.Thread, error) {
-	panic("implement me")
-}
-
-func (p *pgStorage) VoteOnThread(vote models.Vote) (*models.Thread, error) {
-	panic("implement me")
-}
-
-func (p *pgStorage) GetUserByNickname(nickname string) (*models.User, error) {
-	var user models.User
-	query := fmt.Sprintf(`select * from main.user
-							where nickname = '%s'`, nickname)
-
-	_, err := p.db.Query(&user, query)
-	if err != nil {
-		return nil, err
 	}
-	return &user, nil
 
-	//var newUser models.User
-	//err := p.db.Model(&newUser).Where("user_id = ?", id).Select()
-	//if err != nil {
-	//	err = fmt.Errorf("error in select user with id: %s : error: %w", id, err)
-	//	return nil, err
-	//}
-
-}
-
-func (p *pgStorage) CreateUser(user models.User) (*models.User, error) {
-	query := fmt.Sprintf(`insert into main.user 
-					(nickname, email, fullname, about) values ('%s', '%s', '%s', '%s')`,
-					user.Nickname, user.Email, user.Fullname, user.About)
-
-	_, err := p.db.Query(&user, query)
+	err := tx.Commit()
 	if err != nil {
-		return nil, err
+		return models.Thread{}, models.NewError(500, models.InternalError)
 	}
-	//_, errInsert := p.db.Model(&user).Returning("*").Insert()
-	//if errInsert != nil {
-	//	if isExist, err := p.db.Model(&user).Exists(); err != nil {
-	//		errInsert = fmt.Errorf("error in inserting user with name: %s : error: %w", user.Nickname, err)
-	//	} else if isExist {
-	//		errInsert = errors.New("user already exists")
-	//	}
-	//	return nil, errInsert
-	//}
-	return &user, nil
-}
 
-func (p *pgStorage) UpdateUser(userNew models.User) (*models.User, error) {
-	var user models.User
-	query := fmt.Sprintf(`update main.user
-				set email = '%s', fullname = '%s', about = '%s'
-				where nickname = '%s'`,
-				userNew.Email, userNew.Fullname, userNew.About, userNew.Nickname)
-
-	_, err := p.db.Query(&user, query)
-	if err != nil {
-		return nil, err
-	}
-	return &user, nil
+	return thread, nil
 }

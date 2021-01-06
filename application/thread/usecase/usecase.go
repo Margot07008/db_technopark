@@ -1,121 +1,39 @@
 package usecase
-//
-//import (
-//	"fmt"
-//	logger "github.com/apsdehal/go-logger"
-//	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/models"
-//	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/thread"
-//	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/user"
-//)
-//
-//type UseCase struct {
-//	iLog   *logger.Logger
-//	errLog *logger.Logger
-//	repos  thread.Repository
-//}
-//
-//func NewUseCase(iLog *logger.Logger, errLog *logger.Logger,
-//	repos thread.Repository) *UseCase {
-//	return &UseCase{
-//		iLog:   iLog,
-//		errLog: errLog,
-//		repos:  repos,
-//	}
-//}
-//
-//func (u *UseCase) GetThreadDetails(ID int32, slug string) (*models.Thread, error) {
-//	return u.repos.GetThreadDetails(ID, slug)
-//}
-//
-//func (u *UseCase) CreateThread(thread models.Thread) (*models.Thread, error) {
-//	return u.repos.CreateThread(thread)
-//}
-//
-//func (u *UseCase) UpdateThread(thread models.Thread) (*models.Thread, error) {
-//	_, err := u.repos.GetUserByNickname(user.Nickname)
-//	if err != nil {
-//		err = fmt.Errorf("error get user with id : %w", err)
-//		return nil, err
-//	}
-//
-//	//var newUser models.User
-//	//newUser.Nickname = user.Nickname
-//	//
-//	//if user.Email != "" {
-//	//	newUser.Email = user.Email
-//	//}
-//	//if user.Fullname != "" {
-//	//	newUser.Fullname = user.Fullname
-//	//}
-//	//if user.About != "" {
-//	//	newUser.About = user.About
-//	//}
-//
-//	newUser, err := u.repos.UpdateUser(user)
-//	if err != nil {
-//		err = fmt.Errorf("error in updating user with id = %s : %w", user.Nickname, err)
-//		return nil, err
-//	}
-//
-//	return newUser, nil
-//	return u.repos.UpdateThread(thread)
-//}
-//
-//func (u *UseCase) GetPostsThread(params models.ThreadParams) ([]models.Thread, error) {
-//	return u.repos.GetPostsThread(params)
-//}
-//
-//func (u *UseCase) VoteOnThread(vote models.Vote) (*models.Thread, error) {
-//	return u.repos.VoteOnThread(vote)
-//}
-//
-//
-//
-//func (u *UseCase) GetUserProfile(id string) (*models.User, error) {
-//	userById, err := u.repos.GetUserByNickname(id)
-//	if err != nil {
-//		err = fmt.Errorf("error in user get by id func : %w", err)
-//		return nil, err
-//	}
-//	return userById, nil
-//}
-//
-//func (u *UseCase) CreateUser(user models.User) (*models.User, error) {
-//	userNew, err := u.repos.CreateUser(user)
-//	if err != nil {
-//		if err.Error() != "user already exists" {
-//			err = fmt.Errorf("error in user get by id func : %w", err)
-//		}
-//		return nil, err
-//	}
-//	return userNew, nil
-//}
-//
-//func (u *UseCase) UpdateUser(user models.User) (*models.User, error) {
-//	_, err := u.repos.GetUserByNickname(user.Nickname)
-//	if err != nil {
-//		err = fmt.Errorf("error get user with id : %w", err)
-//		return nil, err
-//	}
-//
-//	//var newUser models.User
-//	//newUser.Nickname = user.Nickname
-//	//
-//	//if user.Email != "" {
-//	//	newUser.Email = user.Email
-//	//}
-//	//if user.Fullname != "" {
-//	//	newUser.Fullname = user.Fullname
-//	//}
-//	//if user.About != "" {
-//	//	newUser.About = user.About
-//	//}
-//
-//	newUser, err := u.repos.UpdateUser(user)
-//	if err != nil {
-//		err = fmt.Errorf("error in updating user with id = %s : %w", user.Nickname, err)
-//		return nil, err
-//	}
-//
-//	return newUser, nil
-//}
+
+import (
+	"db_technopark/application/forum"
+	"db_technopark/application/models"
+	"db_technopark/application/thread"
+	"db_technopark/application/user"
+)
+
+type threadUsecase struct {
+	threadRepo thread.Repository
+	userRepo   user.Repository
+	forumRepo  forum.Repository
+}
+
+func NewThreadUsecase(threadRepo thread.Repository, userRepo user.Repository, forumRepo forum.Repository) thread.Usecase {
+	return &threadUsecase{
+		threadRepo: threadRepo,
+		userRepo:   userRepo,
+		forumRepo:  forumRepo,
+	}
+}
+
+func (u threadUsecase) CreateThread(slug string, thread models.Thread) (models.Thread, *models.Error) {
+	foundedForum, err := u.forumRepo.GetForumBySlug(slug)
+	if err != nil {
+		return models.Thread{}, err
+	}
+	foundedUser, err := u.userRepo.GetByNickname(thread.Author)
+	if err != nil {
+		return models.Thread{}, err
+	}
+	createdThread, err := u.threadRepo.CreateThread(foundedForum, foundedUser, thread)
+	if err != nil && err.StatusCode == 409 {
+		//TODO add getting thread by Slug
+		return thread, models.NewError(409, models.ConflictError)
+	}
+	return createdThread, err
+}
