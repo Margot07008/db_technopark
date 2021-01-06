@@ -22,3 +22,22 @@ func (p pgForumRepository) CreateForum(userNick string, forumNew models.Forum) (
 	}
 	return forumNew, nil
 }
+
+func (p pgForumRepository) GetForumBySlug(slug string) (models.Forum, *models.Error) {
+
+	res, err := p.conn.Query(`SELECT title, "user", slug, posts, threads FROM main.forums WHERE slug = $1`, slug)
+	if err != nil {
+		return models.Forum{}, models.NewError(500, models.InternalError)
+	}
+	defer res.Close()
+	forumModel := models.Forum{}
+	if res.Next() {
+		err = res.Scan(&forumModel.Title, &forumModel.User, &forumModel.Slug, &forumModel.Posts, &forumModel.Threads)
+		if err != nil {
+			return models.Forum{}, models.NewError(500, models.DBParsingError)
+		}
+		return forumModel, nil
+	}
+	return models.Forum{}, models.NewError(404, models.NotFoundError)
+
+}

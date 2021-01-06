@@ -16,6 +16,27 @@ func NewForumHandler(router *fasthttprouter.Router, forumUsecase forum.Usecase) 
 		forumUsecase: forumUsecase,
 	}
 	router.POST("/api/forum/create", handler.CreateForum)
+	router.GET("/api/forum/:slug/details", handler.GetForumBySlug)
+}
+
+func (u ForumHandler) GetForumBySlug(ctx *fasthttp.RequestCtx) {
+	slug := ctx.UserValue("slug").(string)
+	if slug == "" {
+		ctx.SetStatusCode(400)
+		ctx.SetBody(models.BadRequestErrorBytes)
+	}
+	foundedForum, err := u.forumUsecase.GetForumBySlug(slug)
+	if err != nil {
+		err.SetToContext(ctx)
+		return
+	}
+	jsonBlob, e := foundedForum.MarshalJSON()
+	if e != nil {
+		ctx.SetStatusCode(500)
+		ctx.SetBody(models.InternalErrorBytes)
+		return
+	}
+	ctx.SetBody(jsonBlob)
 }
 
 func (u ForumHandler) CreateForum(ctx *fasthttp.RequestCtx) {

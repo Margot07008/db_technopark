@@ -22,3 +22,7 @@ func (u forumUsecase) CreateForum(forumNew models.Forum) (models.Forum, *models.
 	}
 	return u.forumRepo.CreateForum(author.Nickname, forumNew)
 }
+
+func (u forumUsecase) GetForumBySlug(slug string) (models.Forum, *models.Error) {
+	return u.forumRepo.GetForumBySlug(slug)
+}
