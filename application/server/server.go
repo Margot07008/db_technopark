@@ -16,6 +16,10 @@ import (
 	deliveryThread "db_technopark/application/thread/delivery/http"
 	repositoryThread "db_technopark/application/thread/repository"
 	usecaseThread "db_technopark/application/thread/usecase"
+
+	deliveryPost "db_technopark/application/post/delivery/http"
+	repositoryPost "db_technopark/application/post/repository"
+	usecasePost "db_technopark/application/post/usecase"
 )
 
 type server struct {
@@ -28,16 +32,19 @@ func NewServer(host string, conn *pgx.ConnPool) *server {
 	userRepo := repositoryUser.NewPgUserRepository(conn)
 	forumRepo := repositoryForum.NewPgForumRepository(conn)
 	threadRepo := repositoryThread.NewPgThreadRepository(conn)
+	postRepo := repositoryPost.NewPgPostRepository(conn)
 
 	userUsecase := usecaseUser.NewUserUsecase(userRepo)
 	forumUsecase := usecaseForum.NewForumUsecase(userRepo, forumRepo, threadRepo)
 	threadUsecase := usecaseThread.NewThreadUsecase(threadRepo, userRepo, forumRepo)
+	postUsecase := usecasePost.NewPostUsecase(userRepo, postRepo, threadRepo, forumRepo)
 
 	router := fasthttprouter.New()
 
 	deliveryUser.NewUserHandler(router, userUsecase)
 	deliveryForum.NewForumHandler(router, forumUsecase)
 	deliveryThread.NewThreadHandler(router, threadUsecase, forumUsecase)
+	deliveryPost.NewPostHandler(router, postUsecase)
 
 	return &server{
 		Host:   host,

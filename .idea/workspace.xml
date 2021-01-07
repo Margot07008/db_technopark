@@ -2,16 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8e6c67a-4570-45bf-93ac-82cf779a173d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f/storage_v2/_src_/database/forum.IY3RBQ/schema/main.uQUzAA.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f/storage_v2/_src_/database/forum.IY3RBQ/schema/main.uQUzAA.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/forum/delivery/http/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/forum/delivery/http/handler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/forum/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/forum/usecase.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/forum/usecase/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/forum/usecase/usecase.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/forum/repository/pg_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/forum/repository/pg_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/models/models_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/models/models_easyjson.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/models/post.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/models/post.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/models/thread.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/models/thread.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/models/vote.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/models/vote.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/post/delivery/http/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/post/delivery/http/handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/post/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/post/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/post/repository/pg_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/post/repository/pg_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/post/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/post/usecase.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/post/usecase/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/post/usecase/usecase.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/server/server.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/thread/delivery/http/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/thread/delivery/http/handler.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/thread/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/thread/repository.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/thread/repository/pg_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/thread/repository/pg_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/thread/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/thread/usecase.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/thread/usecase/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/thread/usecase/usecase.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/user/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/user/repository/pg_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/repository/pg_repository.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/20201121155548-init-user.sql" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/20201121155548-init-user.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,9 +104,29 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/application/thread/delivery/http/handler.go</url>
-          <line>41</line>
-          <option name="timeStamp" value="18" />
+          <url>file://$PROJECT_DIR$/application/user/repository/pg_repository.go</url>
+          <line>78</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/application/user/repository/pg_repository.go</url>
+          <line>108</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/application/forum/delivery/http/handler.go</url>
+          <line>109</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/application/user/delivery/http/handler.go</url>
+          <line>87</line>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/application/post/usecase/usecase.go</url>
+          <line>39</line>
+          <option name="timeStamp" value="37" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

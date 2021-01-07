@@ -25,7 +25,7 @@ func (p pgForumRepository) CreateForum(userNick string, forumNew models.Forum) (
 
 func (p pgForumRepository) GetForumBySlug(slug string) (models.Forum, *models.Error) {
 
-	res, err := p.conn.Query(`SELECT title, "user", slug, posts, threads FROM main.forums WHERE slug = $1`, slug)
+	res, err := p.conn.Query(`select title, "user", slug, posts, threads from main.forums where lower(slug) = lower($1)`, slug)
 	if err != nil {
 		return models.Forum{}, models.NewError(500, models.InternalError)
 	}

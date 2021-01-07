@@ -7,12 +7,13 @@ create extension if not exists citext;
 drop table if exists users cascade;
 drop table if exists forums cascade;
 drop table if exists threads cascade;
+drop table if exists posts cascade;
 
 create unlogged table users
 (
     nickname citext not null unique primary key,
     email citext not null unique,
-    fullname varchar(128),
+    fullname varchar(100),
     about text
 );
 
@@ -45,3 +46,25 @@ create unlogged table threads
 create index if not exists idx_threads_slug on threads (slug);
 create index if not exists idx_threads_forum_created on threads (forum, created);
 create index if not exists idx_threads_author_forum on threads (author, forum);
+
+create unlogged table posts
+(
+    id       serial primary key ,
+    forum    citext references forums (slug),
+    parent   integer default 0,
+    author   citext references users (nickname) not null,
+    created  timestamptz default current_timestamp,
+    isEdited boolean default false,
+    message  text not null,
+    thread   integer references threads (id) not null,
+    path     integer[] default array []::int[]
+);
+
+create index if not exists idx_posts_path_id on posts (id, (path [1]));
+create index if not exists idx_posts_path on posts (path);
+create index if not exists idx_posts_path_1 on posts ((path [1]));
+create index if not exists idx_posts_thread_id on posts (thread, id);
+create index if not exists idx_posts_thread on posts (thread);
+create index if not exists idx_posts_thread_path_id on posts (thread, path, id);
+create index if not exists idx_posts_thread_id_path_parent on posts (thread, id, (path[1]), parent);
+create index if not exists idx_posts_author_forum on posts (author, forum);

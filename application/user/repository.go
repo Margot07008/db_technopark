@@ -8,4 +8,5 @@ type Repository interface {
 	GetByEmail(email string) (models.User, *models.Error)
 	Update(userUdp models.User) (models.User, *models.Error)
 	GetByForum(forum models.Forum, query models.PostsRequestQuery) (models.Users, *models.Error)
+	AddUserToForum(nickname string, forum string)
 }

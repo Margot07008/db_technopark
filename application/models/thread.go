@@ -13,7 +13,7 @@ type Thread struct {
 	Created time.Time `json:"created,omitempty"`
 }
 
-type TreadUpdate struct {
+type ThreadUpdate struct {
 	Id      int32  `json:"id,omitempty"`
 	Slug    string `json:"slug,omitempty"`
 	Title   string `json:"title,omitempty"`

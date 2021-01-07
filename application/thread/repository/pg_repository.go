@@ -86,3 +86,87 @@ func (p pgThreadRepository) GetThreadsBySlug(forum models.Forum, query models.Po
 
 	return foundedThreads, nil
 }
+
+func (p pgThreadRepository) GetBySlug(slug string) (models.Thread, *models.Error) {
+	if slug == "" {
+		return models.Thread{}, models.NewError(400, models.BadRequestError)
+	}
+
+	fThread := models.Thread{}
+	res, err := p.conn.Query(`select * from main.threads where lower(slug) = lower($1)`, slug)
+
+	if err != nil {
+		return models.Thread{}, models.NewError(404, models.NotFoundError)
+	}
+	defer res.Close()
+
+	if res.Next() {
+		err = res.Scan(&fThread.Id, &fThread.Title, &fThread.Author, &fThread.Forum, &fThread.Message, &fThread.Votes, &fThread.Slug, &fThread.Created)
+		if err != nil {
+			return models.Thread{}, models.NewError(500, models.DBParsingError)
+		}
+		return fThread, nil
+	}
+	return models.Thread{}, models.NewError(404, models.NotFoundError)
+}
+
+func (p pgThreadRepository) GetByID(id int32) (models.Thread, *models.Error) {
+	fThread := models.Thread{}
+
+	if id == -1 {
+		return models.Thread{}, models.NewError(400, models.BadRequestError)
+	}
+
+	res, err := p.conn.Query(`select * from main.threads where id = $1`, id)
+	if err != nil {
+		return models.Thread{}, models.NewError(404, models.NotFoundError)
+	}
+	defer res.Close()
+
+	nullSlug := &pgtype.Varchar{}
+	if res.Next() {
+		err = res.Scan(&fThread.Id, &fThread.Title, &fThread.Author, &fThread.Forum, &fThread.Message, &fThread.Votes, nullSlug, &fThread.Created)
+		if err != nil {
+			return models.Thread{}, models.NewError(500, models.InternalError)
+		}
+
+		fThread.Slug = nullSlug.String
+		return fThread, nil
+	}
+
+	return models.Thread{}, models.NewError(404, models.NotFoundError)
+}
+
+func (p pgThreadRepository) Update(thread models.Thread, threadUpdate models.ThreadUpdate) (models.Thread, *models.Error) {
+	if threadUpdate.Message == "" && threadUpdate.Title == "" {
+		return thread, nil
+	}
+
+	baseSQL := "update main.threads set"
+	if threadUpdate.Message == "" {
+		baseSQL += " message = message,"
+	} else {
+		thread.Message = threadUpdate.Message
+		baseSQL += " message = '" + threadUpdate.Message + "',"
+	}
+
+	if threadUpdate.Title == "" {
+		baseSQL += " title = title"
+	} else {
+		thread.Title = threadUpdate.Title
+		baseSQL += " title = '" + threadUpdate.Title + "'"
+	}
+
+	baseSQL += " where slug = '" + thread.Slug + "'"
+
+	res, err := p.conn.Exec(baseSQL)
+	if err != nil {
+		return models.Thread{}, models.NewError(500, models.UpdateError)
+	}
+
+	if res.RowsAffected() == 0 {
+		return models.Thread{}, models.NewError(404, models.NotFoundError)
+	}
+
+	return thread, nil
+}

@@ -6,6 +6,7 @@ import (
 	"db_technopark/application/thread"
 	"github.com/buaazp/fasthttprouter"
 	"github.com/valyala/fasthttp"
+	"strconv"
 )
 
 type ThreadHandler struct {
@@ -19,8 +20,9 @@ func NewThreadHandler(router *fasthttprouter.Router, threadUsecase thread.Usecas
 		forumUsecase:  forumUsecase,
 	}
 
-	router.POST("/api/forum/:path1/:path2", handler.CreateThread) //:slug/create
-
+	router.POST("/api/forum/:path1/:path2", handler.CheckPath) //:slug/create
+	router.GET("/api/thread/:slug_or_id/details", handler.GetThread)
+	router.POST("/api/thread/:slug_or_id/details", handler.UpdateThread)
 }
 
 func (h ThreadHandler) CheckPath(ctx *fasthttp.RequestCtx) {
@@ -33,6 +35,58 @@ func (h ThreadHandler) CheckPath(ctx *fasthttp.RequestCtx) {
 		ctx.SetStatusCode(404)
 		ctx.SetBody(models.BadRequestErrorBytes)
 	}
+}
+
+func (h ThreadHandler) UpdateThread(ctx *fasthttp.RequestCtx) {
+	updateThread := models.ThreadUpdate{}
+
+	slugOrId := ctx.UserValue("slug_or_id").(string)
+	id, _ := strconv.ParseInt(slugOrId, 10, 64)
+	if id == 0 {
+		id = -1
+		updateThread.Slug = slugOrId
+	}
+	updateThread.Id = int32(id)
+
+	err := updateThread.UnmarshalJSON(ctx.PostBody())
+	if err != nil {
+		ctx.SetStatusCode(400)
+		ctx.SetBody(models.BadRequestErrorBytes)
+		return
+	}
+	updatedThread, e := h.threadUsecase.ThreadUpdate(updateThread)
+	if e != nil {
+		e.SetToContext(ctx)
+		return
+	}
+	jsonBlob, err := updatedThread.MarshalJSON()
+	if err != nil {
+		ctx.SetStatusCode(500)
+		ctx.SetBody(models.InternalErrorBytes)
+		return
+	}
+	ctx.SetBody(jsonBlob)
+}
+
+func (h ThreadHandler) GetThread(ctx *fasthttp.RequestCtx) {
+	slugOrId := ctx.UserValue("slug_or_id").(string)
+	id, _ := strconv.ParseInt(slugOrId, 10, 64)
+	isSlug := false
+	if id == 0 {
+		isSlug = true
+	}
+	existingThread, err := h.threadUsecase.GetThreadBySlugOrId(slugOrId, isSlug)
+	if err != nil {
+		err.SetToContext(ctx)
+		return
+	}
+	jsonBlob, e := existingThread.MarshalJSON()
+	if e != nil {
+		ctx.SetStatusCode(500)
+		ctx.SetBody(models.InternalErrorBytes)
+		return
+	}
+	ctx.SetBody(jsonBlob)
 }
 
 func (h ThreadHandler) CreateThread(ctx *fasthttp.RequestCtx) {

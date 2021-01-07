@@ -19,7 +19,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
-	github.com/lib/pq v1.9.0 // indirect
+	github.com/lib/pq v1.9.0
 	github.com/mailcourses/technopark-dbms-forum v0.2.2 // indirect
 	github.com/mailru/easyjson v0.7.6
 	github.com/mattn/go-colorable v0.1.8 // indirect

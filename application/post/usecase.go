@@ -1,10 +1,8 @@
 package post
 
-import (
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/models"
-)
+import "db_technopark/application/models"
 
-type UseCase interface {
-	GetPostDetails(ID int, related []string) (*models.PostFull, error)
-	UpdatePostDetails(ID int, newMessage string) (*models.Post, error)
+type Usecase interface {
+	CreatePosts(slug string, id int32, posts models.Posts) (models.Posts, *models.Error)
+	GetPostDetails(id int32, query models.PostsRelatedQuery) (models.PostFull, *models.Error)
 }

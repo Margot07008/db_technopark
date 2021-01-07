@@ -59,9 +59,9 @@ func (p pgUserRepository) GetByForum(forum models.Forum, query models.PostsReque
 
 func (p pgUserRepository) GetByNickname(nickname string) (models.User, *models.Error) {
 	modelUser := models.User{}
-	res, err := p.conn.Query(`SELECT nickname, email, fullname, about FROM main.users WHERE nickname = $1`, nickname)
+	res, err := p.conn.Query(`select nickname, email, fullname, about from main.users where lower(nickname) = lower($1)`, nickname)
 	if err != nil {
-		return models.User{}, models.NewError(404, models.NotFoundError)
+		return models.User{}, models.NewError(500, models.InternalError)
 	}
 	defer res.Close()
 	if res.Next() {
@@ -76,9 +76,9 @@ func (p pgUserRepository) GetByNickname(nickname string) (models.User, *models.E
 
 func (p pgUserRepository) GetByEmail(email string) (models.User, *models.Error) {
 	modelUser := models.User{}
-	res, err := p.conn.Query(`SELECT nickname, email, fullname, about FROM main.users WHERE email = $1`, email)
+	res, err := p.conn.Query(`select nickname, email, fullname, about from main.users where lower(email) = lower($1)`, email)
 	if err != nil {
-		return models.User{}, models.NewError(404, models.NotFoundError)
+		return models.User{}, models.NewError(500, models.InternalError)
 	}
 	defer res.Close()
 	if res.Next() {
@@ -106,7 +106,7 @@ func (p pgUserRepository) Create(userNew models.User) (models.User, *models.Erro
 }
 
 func (p pgUserRepository) Update(userUpd models.User) (models.User, *models.Error) {
-	if userUpd.Nickname == "" && userUpd.Fullname == "" && userUpd.Email == "" && userUpd.About == "" {
+	if userUpd.Fullname == "" && userUpd.Email == "" && userUpd.About == "" {
 		updatedUser, _ := p.GetByNickname(userUpd.Nickname)
 		return updatedUser, nil
 	}
@@ -128,17 +128,28 @@ func (p pgUserRepository) Update(userUpd models.User) (models.User, *models.Erro
 	if userUpd.About != "" {
 		querySQL += " about = '" + userUpd.About + "'"
 	} else {
-		querySQL += " about = about,"
+		querySQL += " about = about"
 	}
 
 	querySQL += " where nickname = '" + userUpd.Nickname + "'"
 	res, err := p.conn.Exec(querySQL)
 	if err != nil {
-		return models.User{}, models.NewError(404, models.NotFoundError)
+		return models.User{}, models.NewError(409, models.UpdateError)
 	}
 	if res.RowsAffected() == 0 {
-		return models.User{}, models.NewError(404, models.NotFoundError)
+		_, err := p.GetByEmail(userUpd.Email)
+		if err != nil {
+			return models.User{}, models.NewError(404, models.NotFoundError)
+		}
+		return models.User{}, models.NewError(409, models.UpdateError)
+
 	}
 	updatedUser, _ := p.GetByNickname(userUpd.Nickname)
 	return updatedUser, nil
+}
+
+func (p pgUserRepository) AddUserToForum(nickname string, forum string) {
+	_, _ = p.conn.Exec(`insert into main.users (nickname, slug) values ($1, $2) on conflict do nothing`,
+		nickname, forum)
+	return
 }
