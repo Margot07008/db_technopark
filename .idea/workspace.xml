@@ -2,14 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8e6c67a-4570-45bf-93ac-82cf779a173d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/application/models/others.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/forum/delivery/http/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/forum/delivery/http/handler.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/forum/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/forum/usecase.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/forum/usecase/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/forum/usecase/usecase.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/models/models_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/models/models_easyjson.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/user/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/repository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/user/repository/pg_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/repository/pg_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/thread/delivery/http/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/thread/delivery/http/handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/thread/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/thread/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/thread/repository/pg_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/thread/repository/pg_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +81,8 @@
     <MESSAGE value="add create forum" />
     <MESSAGE value="add get forum by slug" />
     <MESSAGE value="add creating thread" />
-    <option name="LAST_COMMIT_MESSAGE" value="add creating thread" />
+    <MESSAGE value="add getting users from selected forum" />
+    <option name="LAST_COMMIT_MESSAGE" value="add getting users from selected forum" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -89,13 +92,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/application/thread/delivery/http/handler.go</url>
-          <line>39</line>
+          <line>41</line>
           <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/application/user/repository/pg_repository.go</url>
-          <line>38</line>
-          <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

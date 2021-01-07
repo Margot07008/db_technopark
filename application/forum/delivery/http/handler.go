@@ -19,6 +19,7 @@ func NewForumHandler(router *fasthttprouter.Router, forumUsecase forum.Usecase) 
 	router.POST("/api/forum/:path1", handler.CheckPath) ///create
 	router.GET("/api/forum/:slug/details", handler.GetForumBySlug)
 	router.GET("/api/forum/:slug/users", handler.GerForumUsers)
+	router.GET("/api/forum/:slug/threads", handler.GetForumThreads)
 }
 
 func (h ForumHandler) CheckPath(ctx *fasthttp.RequestCtx) {
@@ -29,6 +30,29 @@ func (h ForumHandler) CheckPath(ctx *fasthttp.RequestCtx) {
 		ctx.SetStatusCode(404)
 		ctx.SetBody(models.BadRequestErrorBytes)
 	}
+}
+
+func (h ForumHandler) GetForumThreads(ctx *fasthttp.RequestCtx) {
+	slug := ctx.UserValue("slug").(string)
+	query := models.PostsRequestQuery{
+		Limit: queryWorker.GetIntParam(ctx, "limit"),
+		Since: queryWorker.GetStringParam(ctx, "since"),
+		Desc:  queryWorker.GetBoolParam(ctx, "desc"),
+	}
+	threads, err := h.forumUsecase.GetForumThreads(slug, query)
+	if err != nil {
+		err.SetToContext(ctx)
+		return
+	}
+
+	jsonBlob, e := threads.MarshalJSON()
+	if e != nil {
+		ctx.SetStatusCode(500)
+		ctx.SetBody(models.InternalErrorBytes)
+		return
+	}
+
+	ctx.SetBody(jsonBlob)
 }
 
 func (h ForumHandler) GerForumUsers(ctx *fasthttp.RequestCtx) {

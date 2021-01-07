@@ -30,7 +30,7 @@ func NewServer(host string, conn *pgx.ConnPool) *server {
 	threadRepo := repositoryThread.NewPgThreadRepository(conn)
 
 	userUsecase := usecaseUser.NewUserUsecase(userRepo)
-	forumUsecase := usecaseForum.NewForumUsecase(userRepo, forumRepo)
+	forumUsecase := usecaseForum.NewForumUsecase(userRepo, forumRepo, threadRepo)
 	threadUsecase := usecaseThread.NewThreadUsecase(threadRepo, userRepo, forumRepo)
 
 	router := fasthttprouter.New()

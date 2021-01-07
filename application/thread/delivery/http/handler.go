@@ -20,6 +20,7 @@ func NewThreadHandler(router *fasthttprouter.Router, threadUsecase thread.Usecas
 	}
 
 	router.POST("/api/forum/:path1/:path2", handler.CreateThread) //:slug/create
+
 }
 
 func (h ThreadHandler) CheckPath(ctx *fasthttp.RequestCtx) {
