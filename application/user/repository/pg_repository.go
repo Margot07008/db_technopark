@@ -15,7 +15,7 @@ func NewPgUserRepository(db *pgx.ConnPool) user.Repository {
 }
 
 func (p pgUserRepository) GetByForum(forum models.Forum, query models.PostsRequestQuery) (models.Users, *models.Error) {
-	baseSQL := `select about, email, fullname, u.nickname from main.forums as users_forum join main.users u on u.nickname = users_forum.user`
+	baseSQL := `select about, email, fullname, u.nickname from main.users_forum m join main.users u on u.nickname = m.nickname`
 
 	baseSQL += ` where slug = '` + forum.Slug + `'`
 	if query.Since != "" {
@@ -27,9 +27,10 @@ func (p pgUserRepository) GetByForum(forum models.Forum, query models.PostsReque
 	}
 
 	if query.Desc {
-		baseSQL += " order by nickname desc"
+		//TODO fix sort
+		baseSQL += " order by u.nickname COLLATE \"C\" desc"
 	} else {
-		baseSQL += " order by nickname asc"
+		baseSQL += " order by u.nickname COLLATE \"C\" asc"
 	}
 
 	if query.Limit > 0 {
@@ -149,7 +150,7 @@ func (p pgUserRepository) Update(userUpd models.User) (models.User, *models.Erro
 }
 
 func (p pgUserRepository) AddUserToForum(nickname string, forum string) {
-	_, _ = p.conn.Exec(`insert into main.users (nickname, slug) values ($1, $2) on conflict do nothing`,
+	_, _ = p.conn.Exec(`insert into main.users_forum (nickname, slug) values ($1, $2) on conflict do nothing`,
 		nickname, forum)
 	return
 }

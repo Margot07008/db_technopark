@@ -43,7 +43,7 @@ func (p pgPostRepository) CreatePosts(posts models.Posts, thread models.Thread) 
 		}
 	}
 
-	postIdsRows, err := tx.Query(fmt.Sprintf(`select nextval(pg_get_serial_sequence('posts', 'id')) from generate_series(1, %d);`, len(posts)))
+	postIdsRows, err := tx.Query(fmt.Sprintf(`select nextval(pg_get_serial_sequence('main.posts', 'id')) from generate_series(1, %d);`, len(posts)))
 	if err != nil {
 		return models.Posts{}, models.NewError(404, models.NotFoundError)
 	}

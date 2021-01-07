@@ -34,7 +34,7 @@ func (p postUsecase) CreatePosts(slug string, id int32, posts models.Posts) (mod
 	} else {
 		foundThread, err = p.threadRepo.GetByID(id)
 	}
-	if err != nil && err.StatusCode != 404 {
+	if err != nil {
 		return models.Posts{}, err
 	}
 	posts, err = p.postRepo.CreatePosts(posts, foundThread)

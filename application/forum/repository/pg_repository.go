@@ -16,7 +16,7 @@ func NewPgForumRepository(db *pgx.ConnPool) forum.Repository {
 
 func (p pgForumRepository) CreateForum(userNick string, forumNew models.Forum) (models.Forum, *models.Error) {
 	forumNew.User = userNick
-	_, err := p.conn.Exec(`INSERT INTO main.forums (slug, title, "user", posts, threads) VALUES ($1, $2, $3, $4, $5)`, forumNew.Slug, forumNew.Title, forumNew.User, forumNew.Posts, forumNew.Threads)
+	_, err := p.conn.Exec(`insert into main.forums (slug, title, "user", posts, threads) values ($1, $2, $3, $4, $5)`, forumNew.Slug, forumNew.Title, forumNew.User, forumNew.Posts, forumNew.Threads)
 	if err != nil {
 		return models.Forum{}, models.NewError(409, models.CreateError)
 	}

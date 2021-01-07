@@ -3,6 +3,7 @@ package http
 import (
 	"db_technopark/application/models"
 	"db_technopark/application/post"
+	"db_technopark/application/vote"
 	"github.com/buaazp/fasthttprouter"
 	"github.com/valyala/fasthttp"
 	"strconv"
@@ -11,15 +12,53 @@ import (
 
 type PostHandler struct {
 	postUsecase post.Usecase
+	voteUsecase vote.Usecase
 }
 
-func NewPostHandler(router *fasthttprouter.Router, usecase post.Usecase) {
+func NewPostHandler(router *fasthttprouter.Router, posrUsecase post.Usecase, voteUsecase vote.Usecase) {
 	handler := &PostHandler{
-		postUsecase: usecase,
+		postUsecase: posrUsecase,
+		voteUsecase: voteUsecase,
 	}
 
 	router.POST("/api/thread/:slug_or_id/create", handler.CreatePosts)
 	router.GET("/api/post/:id/details", handler.GetOnePost)
+	router.POST("/api/thread/:slug_or_id/vote", handler.CreateVote)
+}
+
+func (p PostHandler) CreateVote(ctx *fasthttp.RequestCtx) {
+	slugOrID := ctx.UserValue("slug_or_id").(string)
+	id, _ := strconv.ParseInt(slugOrID, 10, 64)
+	createdVote := models.Vote{}
+
+	if id == 0 {
+		createdVote.Thread = -1
+		createdVote.ThreadSlug = slugOrID
+	} else {
+		createdVote.Thread = int32(id)
+	}
+
+	err := createdVote.UnmarshalJSON(ctx.PostBody())
+	if err != nil {
+		ctx.SetStatusCode(400)
+		ctx.SetBody(models.BadRequestErrorBytes)
+		return
+	}
+
+	existingThread, e := p.voteUsecase.UpsertVote(createdVote)
+
+	if e != nil {
+		e.SetToContext(ctx)
+		return
+	}
+	jsonBlob, err := existingThread.MarshalJSON()
+	if err != nil {
+		ctx.SetStatusCode(500)
+		ctx.SetBody(models.InternalErrorBytes)
+		return
+	}
+
+	ctx.SetBody(jsonBlob)
 }
 
 func (p PostHandler) GetOnePost(ctx *fasthttp.RequestCtx) {

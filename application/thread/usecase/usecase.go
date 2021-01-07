@@ -38,6 +38,7 @@ func (u threadUsecase) CreateThread(slug string, thread models.Thread) (models.T
 		thread, _ = u.threadRepo.GetBySlug(thread.Slug)
 		return thread, models.NewError(409, models.ConflictError)
 	}
+	//err := u.forumRepo.UpdateThreadField(slug)
 	return createdThread, err
 }
 
