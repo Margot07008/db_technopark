@@ -4,6 +4,7 @@ import (
 	"db_technopark/application/models"
 	"db_technopark/application/post"
 	"db_technopark/application/vote"
+	"db_technopark/pkg/queryWorker"
 	"github.com/buaazp/fasthttprouter"
 	"github.com/valyala/fasthttp"
 	"strconv"
@@ -23,7 +24,69 @@ func NewPostHandler(router *fasthttprouter.Router, posrUsecase post.Usecase, vot
 
 	router.POST("/api/thread/:slug_or_id/create", handler.CreatePosts)
 	router.GET("/api/post/:id/details", handler.GetOnePost)
+	router.POST("/api/post/:id/details", handler.UpdatePost)
 	router.POST("/api/thread/:slug_or_id/vote", handler.CreateVote)
+	router.GET("/api/thread/:slug_or_id/posts", handler.GetManyPosts)
+}
+
+func (p PostHandler) UpdatePost(ctx *fasthttp.RequestCtx) {
+	var id int64 = -1
+	id, _ = strconv.ParseInt(ctx.UserValue("id").(string), 10, 64)
+	if id == -1 {
+		ctx.SetStatusCode(400)
+		ctx.SetBody(models.BadRequestErrorBytes)
+		return
+	}
+	var buffer models.PostUpdate
+	err := buffer.UnmarshalJSON(ctx.PostBody())
+	if err != nil {
+		ctx.SetStatusCode(400)
+		ctx.SetBody(models.BadRequestErrorBytes)
+		return
+	}
+	updatedPost, e := p.postUsecase.UpdatePost(int32(id), buffer)
+	if e != nil {
+		e.SetToContext(ctx)
+		return
+	}
+	jsonBlob, err := updatedPost.MarshalJSON()
+	if err != nil {
+		ctx.SetStatusCode(500)
+		ctx.SetBody(models.InternalErrorBytes)
+		return
+	}
+	ctx.SetBody(jsonBlob)
+}
+
+func (p PostHandler) GetManyPosts(ctx *fasthttp.RequestCtx) {
+	slugOrId := ctx.UserValue("slug_or_id").(string)
+	id, err := strconv.ParseInt(slugOrId, 10, 64)
+	if err != nil {
+		id = -1
+	}
+
+	query := models.PostsRequestQuery{
+		ThreadID:   int32(id),
+		ThreadSlug: slugOrId,
+	}
+
+	query.Limit = queryWorker.GetIntParam(ctx, "limit")
+	query.Since = queryWorker.GetStringParam(ctx, "since")
+	query.Sort = queryWorker.GetStringParam(ctx, "sort")
+	query.Desc = queryWorker.GetBoolParam(ctx, "desc")
+
+	sortedPosts, e := p.postUsecase.GetThreadPosts(query)
+	if e != nil {
+		e.SetToContext(ctx)
+		return
+	}
+	jsonBlob, err := sortedPosts.MarshalJSON()
+	if err != nil {
+		ctx.SetStatusCode(500)
+		ctx.SetBody(models.InternalErrorBytes)
+		return
+	}
+	ctx.SetBody(jsonBlob)
 }
 
 func (p PostHandler) CreateVote(ctx *fasthttp.RequestCtx) {

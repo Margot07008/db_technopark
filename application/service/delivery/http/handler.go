@@ -1,46 +1,41 @@
 package http
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/common"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/service"
-	"net/http"
+	"db_technopark/application/models"
+	"db_technopark/application/service"
+	"github.com/buaazp/fasthttprouter"
+	"github.com/valyala/fasthttp"
 )
 
-type UserHandler struct {
-	UserUseCase service.UseCase
+type ServiceHandler struct {
+	serviceUsecase service.Usecase
 }
 
-func NewRest(router *gin.RouterGroup, useCase service.UseCase, AuthRequired gin.HandlerFunc) *UserHandler {
-	rest := &UserHandler{UserUseCase: useCase}
-	rest.routes(router, AuthRequired)
-	return rest
+func NewServiceHandler(router *fasthttprouter.Router, serviceUsecase service.Usecase) {
+	handler := &ServiceHandler{
+		serviceUsecase: serviceUsecase,
+	}
+	router.POST("/api/service/clear", handler.Clear)
+	router.GET("/api/service/status", handler.GetStatus)
 }
 
-func (u *UserHandler) routes(router *gin.RouterGroup, AuthRequired gin.HandlerFunc) {
-	router.POST("/clear", u.ClearDB)
-	router.GET("/status", u.StatusDB)
-}
-
-func (u *UserHandler) StatusDB(ctx *gin.Context) {
-
-	result, err := u.UserUseCase.GetStatusDB()
-
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, common.RespError{Err: common.DataBaseErr})
-		ctx.AbortWithError(http.StatusInternalServerError, err)
+func (u ServiceHandler) GetStatus(ctx *fasthttp.RequestCtx) {
+	dbStatus, e := u.serviceUsecase.GetDBStatus()
+	if e != nil {
+		e.SetToContext(ctx)
 		return
 	}
-
-	ctx.JSON(http.StatusOK, result)
+	jsonBlob, err := dbStatus.MarshalJSON()
+	if err != nil {
+		ctx.SetStatusCode(500)
+		ctx.SetBody(models.InternalErrorBytes)
+	}
+	ctx.SetBody(jsonBlob)
 }
 
-func (u *UserHandler) ClearDB(ctx *gin.Context) {
-	err := u.UserUseCase.ClearDB()
+func (u ServiceHandler) Clear(ctx *fasthttp.RequestCtx) {
+	err := u.serviceUsecase.ClearDB()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, common.RespError{Err: common.DataBaseErr})
-		return
+		err.SetToContext(ctx)
 	}
-
-	ctx.Status(http.StatusOK)
 }

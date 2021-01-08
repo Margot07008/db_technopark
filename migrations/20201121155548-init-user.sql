@@ -77,7 +77,7 @@ create unlogged table votes
     nickname citext references  users (nickname) not null,
     voice    smallint check ( voice in (-1, 1) ),
     thread   integer references threads (id) not null,
-    UNIQUE (nickname, thread)
+    unique (nickname, thread)
 );
 
 create index if not exists idx_votes_nickname_thread on votes (nickname, thread);
@@ -85,8 +85,8 @@ create index if not exists idx_votes_nickname_thread on votes (nickname, thread)
 create unlogged table users_forum
 (
     nickname citext references users (nickname) not null ,
-    slug     CITEXT REFERENCES forums (slug) not null,
-    UNIQUE (nickname, slug)
+    slug     citext references forums (slug) not null,
+    unique (nickname, slug)
 );
 
 create index if not exists idx_users_forum_nickname_slug on users_forum (nickname, slug);
@@ -139,7 +139,6 @@ CREATE TRIGGER insert_forum_user_trigger
     ON main.threads
     FOR EACH ROW
 EXECUTE PROCEDURE insert_users_forum();
-
 
 CREATE OR REPLACE FUNCTION update_votes() RETURNS TRIGGER AS
 $body$

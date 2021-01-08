@@ -9,7 +9,7 @@ const (
 )
 
 type PostsRequestQuery struct {
-	ThreadID   int64  `json:"id,omitempty"`
+	ThreadID   int32  `json:"id,omitempty"`
 	ThreadSlug string `json:"slug,omitempty"`
 	Limit      int    `json:"limit,omitempty"`
 	Since      string `json:"since,omitempty"`

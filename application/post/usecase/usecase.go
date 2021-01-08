@@ -25,6 +25,30 @@ func NewPostUsecase(userRepo user.Repository, postRepo post.Repository,
 	}
 }
 
+func (p postUsecase) UpdatePost(id int32, newPost models.PostUpdate) (models.Post, *models.Error) {
+	existingPost, err := p.postRepo.GetById(int64(id))
+	if err != nil {
+		return models.Post{}, err
+	}
+	return p.postRepo.Update(existingPost, newPost)
+}
+
+func (p postUsecase) GetThreadPosts(query models.PostsRequestQuery) (models.Posts, *models.Error) {
+	var existingThread models.Thread
+	var err *models.Error
+	if query.ThreadID == -1 {
+		existingThread, err = p.threadRepo.GetBySlug(query.ThreadSlug)
+	} else {
+		existingThread, err = p.threadRepo.GetByID(query.ThreadID)
+	}
+	if err != nil {
+		return models.Posts{}, err
+	} else if existingThread.Author == "" {
+		return models.Posts{}, models.NewError(400, models.BadRequestError)
+	}
+	return p.postRepo.GetMany(existingThread, query)
+}
+
 func (p postUsecase) CreatePosts(slug string, id int32, posts models.Posts) (models.Posts, *models.Error) {
 	var foundThread models.Thread
 	var err *models.Error

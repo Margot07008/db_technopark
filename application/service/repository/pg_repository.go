@@ -1,91 +1,46 @@
 package repository
 
 import (
-	"fmt"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/models"
-	"github.com/go-park-mail-ru/2020_2_MVVM.git/application/thread"
-	"github.com/go-pg/pg/v9"
+	"db_technopark/application/models"
+	"db_technopark/application/service"
+	"github.com/jackc/pgx"
 )
 
-func NewPgRepository(db *pg.DB) thread.Repository {
-	return &pgStorage{db: db}
+type pgServiceRepository struct {
+	conn *pgx.ConnPool
 }
 
-type pgStorage struct {
-	db *pg.DB
+func NewPgServiceRepository(conn *pgx.ConnPool) service.Repository {
+	return &pgServiceRepository{conn: conn}
 }
 
-func (p *pgStorage) GetThreadDetails(ID int32, slug string) (*models.Thread, error) {
-	panic("implement me")
-}
-
-func (p *pgStorage) CreateThread(thread models.Thread) (*models.Thread, error) {
-	panic("implement me")
-}
-
-func (p *pgStorage) UpdateThread(thread models.Thread) (*models.Thread, error) {
-	panic("implement me")
-}
-
-func (p *pgStorage) GetPostsThread(params models.ThreadParams) ([]models.Thread, error) {
-	panic("implement me")
-}
-
-func (p *pgStorage) VoteOnThread(vote models.Vote) (*models.Thread, error) {
-	panic("implement me")
-}
-
-func (p *pgStorage) GetUserByNickname(nickname string) (*models.User, error) {
-	var user models.User
-	query := fmt.Sprintf(`select * from main.user
-							where nickname = '%s'`, nickname)
-
-	_, err := p.db.Query(&user, query)
+func (p pgServiceRepository) Clear() *models.Error {
+	res, err := p.conn.Query("truncate table main.users, main.forums, main.threads, main.posts, main.votes, main.users_forum cascade")
 	if err != nil {
-		return nil, err
+		return models.NewError(500, models.InternalError)
 	}
-	return &user, nil
-
-	//var newUser models.User
-	//err := p.db.Model(&newUser).Where("user_id = ?", id).Select()
-	//if err != nil {
-	//	err = fmt.Errorf("error in select user with id: %s : error: %w", id, err)
-	//	return nil, err
-	//}
-
+	defer res.Close()
+	return nil
 }
 
-func (p *pgStorage) CreateUser(user models.User) (*models.User, error) {
-	query := fmt.Sprintf(`insert into main.user 
-					(nickname, email, fullname, about) values ('%s', '%s', '%s', '%s')`,
-					user.Nickname, user.Email, user.Fullname, user.About)
+func (p pgServiceRepository) GetStatus() (models.Status, *models.Error) {
+	res, err := p.conn.Query("select * from (select count(posts) from main.forums) as f" +
+		" cross join (select count(id) from main.posts) as p" +
+		" cross join (select count(id) from main.threads) as t" +
+		" cross join (select count(nickname) from main.users) as u")
 
-	_, err := p.db.Query(&user, query)
 	if err != nil {
-		return nil, err
+		return models.Status{}, models.NewError(500, models.InternalError)
 	}
-	//_, errInsert := p.db.Model(&user).Returning("*").Insert()
-	//if errInsert != nil {
-	//	if isExist, err := p.db.Model(&user).Exists(); err != nil {
-	//		errInsert = fmt.Errorf("error in inserting user with name: %s : error: %w", user.Nickname, err)
-	//	} else if isExist {
-	//		errInsert = errors.New("user already exists")
-	//	}
-	//	return nil, errInsert
-	//}
-	return &user, nil
-}
+	defer res.Close()
 
-func (p *pgStorage) UpdateUser(userNew models.User) (*models.User, error) {
-	var user models.User
-	query := fmt.Sprintf(`update main.user
-				set email = '%s', fullname = '%s', about = '%s'
-				where nickname = '%s'`,
-				userNew.Email, userNew.Fullname, userNew.About, userNew.Nickname)
-
-	_, err := p.db.Query(&user, query)
-	if err != nil {
-		return nil, err
+	s := models.Status{}
+	for res.Next() {
+		err = res.Scan(&s.Forum, &s.Post, &s.Thread, &s.User)
+		if err != nil {
+			return models.Status{}, models.NewError(500, models.InternalError)
+		}
+		return s, nil
 	}
-	return &user, nil
+	return models.Status{}, models.NewError(500, models.InternalError)
 }

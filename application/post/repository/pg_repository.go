@@ -3,6 +3,7 @@ package repository
 import (
 	"db_technopark/application/models"
 	"db_technopark/application/post"
+	"db_technopark/pkg/postsSQLGen"
 	"fmt"
 	"github.com/jackc/pgx"
 	"github.com/lib/pq"
@@ -15,6 +16,70 @@ type pgPostRepository struct {
 
 func NewPgPostRepository(conn *pgx.ConnPool) post.Repository {
 	return &pgPostRepository{conn: conn}
+}
+
+func (p pgPostRepository) Update(post models.Post, postUpdate models.PostUpdate) (models.Post, *models.Error) {
+	if postUpdate.Message == "" {
+		return post, nil
+	}
+
+	if post.Message == postUpdate.Message {
+		return post, nil
+	}
+
+	res, err := p.conn.Exec("update main.posts set message = $1, isedited = true where id = $2", postUpdate.Message, post.Id)
+	if err != nil {
+		return models.Post{}, models.NewError(409, models.UpdateError)
+	}
+
+	if res.RowsAffected() == 0 {
+		return models.Post{}, models.NewError(500, models.InternalError)
+	}
+
+	post.Message = postUpdate.Message
+	post.IsEdited = true
+
+	return post, nil
+}
+
+func (p pgPostRepository) GetMany(thread models.Thread, query models.PostsRequestQuery) (models.Posts, *models.Error) {
+	generator := postsSQLGen.NewPostsSQLGen(thread, query)
+
+	if query.Sort == "" {
+		query.Sort = models.FLAT
+	}
+
+	baseSQL := ""
+	sortedPosts := make([]models.Post, 0, 1)
+
+	switch query.Sort {
+	case models.FLAT:
+		baseSQL = generator.FlatSort()
+	case models.TREE:
+		baseSQL = generator.TreeSort()
+	case models.PARENT_TREE:
+		baseSQL = generator.ParentTreeSort()
+	}
+
+	res, err := p.conn.Query(baseSQL)
+	if err != nil {
+		return models.Posts{}, models.NewError(500, models.InternalError)
+	}
+	defer res.Close()
+
+	bufferPost := models.Post{}
+
+	for res.Next() {
+		err := res.Scan(&bufferPost.Author, &bufferPost.Created, &bufferPost.Forum, &bufferPost.Id,
+			&bufferPost.IsEdited, &bufferPost.Message, &bufferPost.Parent, &bufferPost.Thread)
+
+		if err != nil {
+			return models.Posts{}, models.NewError(500, models.DBParsingError)
+		}
+		sortedPosts = append(sortedPosts, bufferPost)
+	}
+
+	return sortedPosts, nil
 }
 
 func (p pgPostRepository) CreatePosts(posts models.Posts, thread models.Thread) (models.Posts, *models.Error) {
