@@ -1,6 +1,6 @@
 development:
   dialect: postgres
-  datasource: host=localhost dbname=forum user=postgres password=docker sslmode=disable
+  datasource: host=localhost dbname=forum user=techdb_user password=techdb_password sslmode=disable
   dir: migrations
   table: migrations
   schema: public

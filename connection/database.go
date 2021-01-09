@@ -6,8 +6,8 @@ var config = pgx.ConnConfig{
 	Host:     "localhost",
 	Port:     5432,
 	Database: "forum",
-	User:     "postgres",
-	Password: "docker",
+	User:     "techdb_user",
+	Password: "techdb_password",
 }
 
 func InitDBConnection() (*pgx.ConnPool, error) {

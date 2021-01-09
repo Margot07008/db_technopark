@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8e6c67a-4570-45bf-93ac-82cf779a173d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f/storage_v2/_src_/database/forum.IY3RBQ/schema/main.uQUzAA.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e3c02cdc-d7b3-463c-bbe0-14ce4550f36f/storage_v2/_src_/database/forum.IY3RBQ/schema/main.uQUzAA.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/user/repository/pg_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/application/user/repository/pg_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/configs/config.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connection/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/connection/database.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dbconfig.yml" beforeDir="false" afterPath="$PROJECT_DIR$/dbconfig.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/20201121155548-init-user.sql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +54,7 @@
       <recent name="$PROJECT_DIR$/application/connection" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Build.go build db_technopark/cmd/api">
     <configuration name="go build db_technopark/cmd/api" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="db_technopark" />
       <working_directory value="$PROJECT_DIR$" />
@@ -60,9 +64,18 @@
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
+    <configuration name="Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="sourceFilePath" value="Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build db_technopark/cmd/api" />
+        <item itemvalue="Docker.Dockerfile" />
       </list>
     </recent_temporary>
   </component>
@@ -79,7 +92,8 @@
     <MESSAGE value="add new functions" />
     <MESSAGE value="add new functions2" />
     <MESSAGE value="need some fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="need some fix" />
+    <MESSAGE value="done" />
+    <option name="LAST_COMMIT_MESSAGE" value="done" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>

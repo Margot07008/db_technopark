@@ -1,13 +1,13 @@
 ---
-listen: :8080
+listen: :5000
 
 docPath: /opt/doc
 
 db:
   host: localhost
   port: 5432
-  user: postgres
-  password: docker
+  user: techdb_user
+  password: techdb_password
   name: forum
 
 redis_address: localhost:7001
