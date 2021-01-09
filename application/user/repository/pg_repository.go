@@ -20,17 +20,16 @@ func (p pgUserRepository) GetByForum(forum models.Forum, query models.PostsReque
 	baseSQL += ` where slug = '` + forum.Slug + `'`
 	if query.Since != "" {
 		if query.Desc {
-			baseSQL += ` and u.nickname < '` + query.Since + `'`
+			baseSQL += ` and lower(u.nickname)::bytea < lower('` + query.Since + `')::bytea`
 		} else {
-			baseSQL += ` and u.nickname > '` + query.Since + `'`
+			baseSQL += ` and lower(u.nickname)::bytea > lower('` + query.Since + `')::bytea`
 		}
 	}
 
 	if query.Desc {
-		//TODO fix sort
-		baseSQL += " order by u.nickname COLLATE \"C\" desc"
+		baseSQL += " order by lower(u.nickname) COLLATE \"C\" desc"
 	} else {
-		baseSQL += " order by u.nickname COLLATE \"C\" asc"
+		baseSQL += " order by lower(u.nickname) COLLATE \"C\" asc"
 	}
 
 	if query.Limit > 0 {
